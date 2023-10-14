@@ -1,7 +1,7 @@
 import Notiflix from 'notiflix';
 import PicturesPixabay from './pixabay-api';
 // import SimpleLightbox from 'simplelightbox';
-// import SimpleLightbox from 'simplelightbox/dist/simple-lightbox.esm';
+// import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -13,8 +13,6 @@ const picturesPixabay = new PicturesPixabay();
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMoreClick);
 refs.loadMoreBtn.classList.add('hidden');
-
-// console.log(refs.loadMoreBtn.textContent);
 
 function onSearch(e) {
   // ? start
@@ -39,21 +37,13 @@ function onSearch(e) {
   // ? end
 }
 
-// !
-// .then(resp => {
-//   Notiflix.Notify.info(
-//     `Hooray! We found ${resp.data.totalHits - currentPage * 40} images.`
-//   );
-// !
-
 function onLoadMoreClick() {
   // * start
   picturesPixabay.fetchByQuery().then(pics => {
     // console.log(pics);
     // console.log(createMarkup(pics));
-    refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics));
+    refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
   });
-  // gallerySimple.refresh();
   // * end
 }
 
@@ -74,12 +64,9 @@ function createMarkup(arr) {
         downloads,
       }) => `
   <div class='photo-card'>
-  <img
-    src="${webformatURL}"
-    alt="${tags}"
-    loading="lazy"
-    width="400"
-  />
+
+       <img src="${webformatURL}" alt="${tags}" loading="lazy" width="350" />
+
     <div class='info'>
       <p class='info-item'>
         <b>Likes: ${likes}</b>
@@ -99,5 +86,3 @@ function createMarkup(arr) {
     )
     .join('');
 }
-
-// const gallerySimple = new SimpleLightbox('.gallery a', {});

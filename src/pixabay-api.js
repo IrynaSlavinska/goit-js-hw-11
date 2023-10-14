@@ -18,7 +18,6 @@ export default class PicturesPixabay {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.totalHits = 500;
   }
 
   fetchByQuery() {
@@ -29,15 +28,8 @@ export default class PicturesPixabay {
       )
       .then(data => {
         // console.log(data.data);
-        // if (data.data <= this.totalHits) {
-        //   Notiflix.Notify.warning(
-        //     "We're sorry, but you've reached the end of search results."
-        //   );
-        //   refs.loadMoreBtn.classList.add('hidden');
-        // }
         console.log(data);
         this.page += 1;
-        this.totalHits += 500;
         return data.data;
       })
       .catch(err => {
