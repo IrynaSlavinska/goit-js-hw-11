@@ -21,7 +21,7 @@ function onSearch(e) {
   e.preventDefault();
 
   picturesPixabay.searchQuery = e.currentTarget.elements.searchQuery.value;
-
+  pageCounter += 1;
   if (picturesPixabay.searchQuery === '') {
     clearPictContainer();
     pageCounter = 1;
