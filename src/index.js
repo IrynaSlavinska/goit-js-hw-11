@@ -21,7 +21,7 @@ function onSearch(e) {
   e.preventDefault();
 
   picturesPixabay.searchQuery = e.currentTarget.elements.searchQuery.value;
-  pageCounter += 1;
+
   if (picturesPixabay.searchQuery === '') {
     clearPictContainer();
     pageCounter = 1;
@@ -42,10 +42,13 @@ function onSearch(e) {
 
 async function onLoadMoreClick() {
   // * start
-  const moreResult = await picturesPixabay.fetchByQuery();
+  pageCounter += 1;
+  const moreResult = await picturesPixabay.fetchByQuery(pageCounter);
+  pageCounter += 1;
+  console.log(pageCounter);
   // почекай поки виконається цей проміс, і запиши його результат в змінну
 
-  console.log(moreResult.totalHits);
+  // console.log(moreResult.totalHits);
   // console.log(createMarkup(pics));
   refs.pictContainer.insertAdjacentHTML(
     'beforeend',
@@ -53,8 +56,7 @@ async function onLoadMoreClick() {
   );
   gallery.refresh();
 
-  pageCounter += 1;
-  if (pics.totalHits <= pageCounter * 40) {
+  if (moreResult.totalHits <= pageCounter * 40) {
     refs.loadMoreBtn.classList.add('hidden');
     return Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
@@ -63,8 +65,6 @@ async function onLoadMoreClick() {
 
   // * end
 }
-
-Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
 function clearPictContainer() {
   refs.pictContainer.innerHTML = '';
