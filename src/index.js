@@ -31,36 +31,41 @@ function onSearch(e) {
 
   picturesPixabay.resetPage();
   clearPictContainer();
-  refs.loadMoreBtn.classList.add('hidden');
   pageCounter = 1;
 
   picturesPixabay.fetchByQuery(pageCounter).then(pics => {
     refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
     gallery.refresh();
-    refs.loadMoreBtn.classList.remove('hidden');
   });
-
+  refs.loadMoreBtn.classList.remove('hidden');
   // ? end
 }
 
-function onLoadMoreClick() {
+async function onLoadMoreClick() {
   // * start
-  picturesPixabay.fetchByQuery().then(pics => {
-    console.log(pics.totalHits);
-    // console.log(createMarkup(pics));
-    refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
-    gallery.refresh();
+  const moreResult = await picturesPixabay.fetchByQuery();
+  // почекай поки виконається цей проміс, і запиши його результат в змінну
 
-    pageCounter += 1;
-    if (pics.totalHits <= pageCounter * 40) {
-      refs.loadMoreBtn.classList.add('hidden');
-      return Notiflix.Notify.failure(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
-  });
+  console.log(moreResult.totalHits);
+  // console.log(createMarkup(pics));
+  refs.pictContainer.insertAdjacentHTML(
+    'beforeend',
+    createMarkup(moreResult.hits)
+  );
+  gallery.refresh();
+
+  pageCounter += 1;
+  if (pics.totalHits <= pageCounter * 40) {
+    refs.loadMoreBtn.classList.add('hidden');
+    return Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+  }
+
   // * end
 }
+
+Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
 function clearPictContainer() {
   refs.pictContainer.innerHTML = '';
