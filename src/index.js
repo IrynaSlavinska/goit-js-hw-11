@@ -31,7 +31,6 @@ function onSearch(e) {
 
   picturesPixabay.resetPage();
   clearPictContainer();
-  pageCounter = 1;
 
   picturesPixabay.fetchByQuery(pageCounter).then(pics => {
     refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
