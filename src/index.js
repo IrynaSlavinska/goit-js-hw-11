@@ -1,7 +1,7 @@
 import Notiflix from 'notiflix';
 import PicturesPixabay from './pixabay-api';
-// import SimpleLightbox from 'simplelightbox';
-// import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -33,11 +33,17 @@ function onSearch(e) {
 
   picturesPixabay.fetchByQuery().then(pics => {
     refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
+    gallery.refresh();
     refs.loadMoreBtn.classList.remove('hidden');
   });
 
   // ? end
 }
+
+const gallery = new SimpleLightbox('.gallery a', {
+  close: false,
+  showCounter: false,
+});
 
 function onLoadMoreClick() {
   // * start
@@ -45,6 +51,7 @@ function onLoadMoreClick() {
     // console.log(pics);
     // console.log(createMarkup(pics));
     refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
+    gallery.refresh();
   });
   // * end
 }
@@ -67,7 +74,9 @@ function createMarkup(arr) {
       }) => `
   <div class='photo-card'>
 
-       <img src="${webformatURL}" alt="${tags}" loading="lazy" width="350" />
+<a href="${largeImageURL}">
+  <img src="${webformatURL}" alt="${tags}" loading="lazy" width="350" />
+</a>
 
     <div class='info'>
       <p class='info-item'>
