@@ -17,25 +17,21 @@ const options = new URLSearchParams({
 export default class PicturesPixabay {
   constructor() {
     this.searchQuery = '';
-    this.page = 1;
   }
 
-  fetchByQuery() {
+  fetchByQuery(pageCounter) {
     // console.log(this);
     return axios
       .get(
-        `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&${options}&per_page=40&page=${this.page}`
+        `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&${options}&per_page=40&page=${pageCounter}`
       )
       .then(data => {
         // console.log(data.data);
-        console.log(data);
-        this.page += 1;
+        // console.log(data);
+
         return data.data;
       })
       .catch(err => {
-        // console.log(
-        //   "Sorry, there are no images matching your search query. Please try again."
-        // );
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );

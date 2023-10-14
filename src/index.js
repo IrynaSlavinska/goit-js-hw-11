@@ -9,6 +9,7 @@ const refs = {
   loadMoreBtn: document.querySelector('.load-more'),
 };
 const picturesPixabay = new PicturesPixabay();
+let pageCounter = 1;
 
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMoreClick);
@@ -23,6 +24,7 @@ function onSearch(e) {
 
   if (picturesPixabay.searchQuery === '') {
     clearPictContainer();
+    pageCounter = 1;
     refs.loadMoreBtn.classList.add('hidden');
     return Notiflix.Notify.failure('Enter something and try again.');
   }
@@ -30,8 +32,9 @@ function onSearch(e) {
   picturesPixabay.resetPage();
   clearPictContainer();
   refs.loadMoreBtn.classList.add('hidden');
+  pageCounter = 1;
 
-  picturesPixabay.fetchByQuery().then(pics => {
+  picturesPixabay.fetchByQuery(pageCounter).then(pics => {
     refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
     gallery.refresh();
     refs.loadMoreBtn.classList.remove('hidden');
@@ -40,18 +43,21 @@ function onSearch(e) {
   // ? end
 }
 
-const gallery = new SimpleLightbox('.gallery a', {
-  close: false,
-  showCounter: false,
-});
-
 function onLoadMoreClick() {
   // * start
   picturesPixabay.fetchByQuery().then(pics => {
-    // console.log(pics);
+    console.log(pics.totalHits);
     // console.log(createMarkup(pics));
     refs.pictContainer.insertAdjacentHTML('beforeend', createMarkup(pics.hits));
     gallery.refresh();
+
+    pageCounter += 1;
+    if (pics.totalHits <= pageCounter * 40) {
+      refs.loadMoreBtn.classList.add('hidden');
+      return Notiflix.Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
   });
   // * end
 }
@@ -97,3 +103,8 @@ function createMarkup(arr) {
     )
     .join('');
 }
+
+const gallery = new SimpleLightbox('.gallery a', {
+  close: false,
+  showCounter: false,
+});
