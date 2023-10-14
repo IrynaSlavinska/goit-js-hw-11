@@ -22,6 +22,8 @@ function onSearch(e) {
   picturesPixabay.searchQuery = e.currentTarget.elements.searchQuery.value;
 
   if (picturesPixabay.searchQuery === '') {
+    clearPictContainer();
+    refs.loadMoreBtn.classList.add('hidden');
     return Notiflix.Notify.failure('Enter something and try again.');
   }
 
