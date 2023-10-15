@@ -22,7 +22,7 @@ function onSearch(e) {
 
   picturesPixabay.searchQuery = e.currentTarget.elements.searchQuery.value;
 
-  if (picturesPixabay.searchQuery === '') {
+  if (picturesPixabay.searchQuery.trim() === '') {
     clearPictContainer();
     pageCounter = 1;
     refs.loadMoreBtn.classList.add('hidden');
@@ -44,7 +44,6 @@ async function onLoadMoreClick() {
   // * start
   pageCounter += 1;
   const moreResult = await picturesPixabay.fetchByQuery(pageCounter);
-  pageCounter += 1;
   console.log(pageCounter);
   // почекай поки виконається цей проміс, і запиши його результат в змінну
 
